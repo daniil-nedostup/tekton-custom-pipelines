@@ -1,0 +1,27 @@
+# -- This is an example of a ConfigMap that can be used in custom Tekton tasks.
+# Custom tasks can reference this ConfigMap to access necessary settings or parameters during task execution.
+# Modify this template to fit your specific task requirements or use it as a base for creating custom configurations.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: npm-settings
+  labels:
+    {{- include "edp-tekton.labels" . | nindent 4 }}
+data:
+  .npmrc-ci: |
+    registry=${NEXUS_HOST_URL}/repository/edp-npm-group
+    ${NEXUS_HOST}/repository/:email=ci.user@edp.com
+    ${NEXUS_HOST}/repository/:_auth=${upBase64}
+    cache=${NPM_CACHE_DIR}
+
+  .npmrc-publish-snapshots: |
+    registry=${NEXUS_HOST_URL}/repository/edp-npm-snapshots
+    ${NEXUS_HOST}/repository/:email=ci.user@edp.com
+    ${NEXUS_HOST}/repository/:_auth=${upBase64}
+    cache=${NPM_CACHE_DIR}
+
+  .npmrc-publish-releases: |
+    registry=${NEXUS_HOST_URL}/repository/edp-npm-releases
+    ${NEXUS_HOST}/repository/:email=ci.user@edp.com
+    ${NEXUS_HOST}/repository/:_auth=${upBase64}
+    cache=${NPM_CACHE_DIR}

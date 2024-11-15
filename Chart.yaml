@@ -1,0 +1,15 @@
+apiVersion: v2
+name: custom-tekton-resources
+description: Custom Tekton Resources
+home: https://docs.kuberocketci.io/
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+maintainers:
+  - name: epmd-edp
+    email: SupportEPMD-EDP@epam.com
+    url: https://solutionshub.epam.com/solution/kuberocketci
+  - name: sergk
+    url: https://github.com/SergK
+sources:
+  - https://github.com/epam/helm-helm-pipeline

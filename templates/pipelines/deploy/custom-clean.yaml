@@ -1,0 +1,50 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  labels:
+    # -- Required label to identify the pipeline type as "clean".
+    app.edp.epam.com/pipelinetype: clean
+    {{- include "edp-tekton.labels" . | nindent 4 }}
+  name: custom-clean
+spec:
+  description: The Clean pipeline template for deleting applications from Argo CD.
+    This template also demonstrates how to extend the pipeline with custom tasks, including the custom task "hello-world".
+
+  # -- Parameters for the pipeline, automatically injected by the Tekton Trigger Template.
+  params:
+    - default: https://portal-{{ $.Release.Namespace }}.{{ $.Values.dnsWildCard }}/c/main/pipelines/$(context.pipelineRun.namespace)/$(context.pipelineRun.name)
+      description: |
+        URL of the pipeline run in Tekton Dashboard.
+      name: pipelineUrl
+      type: string
+    - description: >
+        EDP kind:CDPipeline name used for deployment. For example: mypipe,
+        myfeature
+      name: CDPIPELINE
+      type: string
+    - description: >
+        EDP kind:Stage name of the kind:CDPipeline defined in the CDPIPELINE
+        values. For example: dev, test, prod
+      name: CDSTAGE
+      type: string
+
+    # -- Example of custom parameters that may be utilized within Tekton tasks.
+    - default: "World"
+      description: "Example parameter"
+      name: username
+      type: string
+    - default: 'alpine:3.18.9'
+      name: image-version
+      type: string
+  tasks:
+    # -- Example of a custom task added to the pipeline.
+    # This task demonstrates how to include custom tasks in the clean pipeline.
+    # It can be adapted to meet specific requirements by modifying or adding custom logic.
+    - name: hello-world-deploy
+      taskRef:
+        name: hello-world-deploy
+      params:
+      - name: BASE_IMAGE
+        value: "$(params.image-version)"
+      - name: username
+        value: "$(params.username)"
